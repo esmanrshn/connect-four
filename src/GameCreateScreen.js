@@ -36,6 +36,7 @@ function GameCreateScreen() {
 
     // Değerler local storage'a kaydedilir
     useEffect(() => {
+        console.log("degerler kaydedildi:", gameData);
         localStorage.setItem('gameData', JSON.stringify(gameData));
     }, [gameData]);
 

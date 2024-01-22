@@ -15,74 +15,72 @@ export default function ConnectFour() {
     const [board, setBoard] = useState(createEmptyBoard());
     const [currentPlayer, setCurrentPlayer] = useState('player');
     const [winner, setWinner] = useState(null);
+    const [gameData, setGameData] = useState(JSON.parse(localStorage.getItem('gameData')));
+    const [gameHistory, setGameHistory] = useState(localStorage.getItem('gameHistory') ? JSON.parse(localStorage.getItem('gameHistory')) : []);
 
     // Önceki sayfadan kullanıcı ve bilgisayar renklerini al
     const userColor = localStorage.getItem('userColor') || 'blue';
     const computerColor = localStorage.getItem('computerColor') || 'red'; // Varsayılan olarak kırmızı
-
     useEffect(() => {
-        if (checkWinner(board, userColor)) {
-            setWinner('Oyuncu Kazandı');
-            setTimeout(() => {
-                redirectToGameHistory();
-            }, 1000);
-        } else if (checkWinner(board, computerColor)) {
-            setWinner('Bilgisayar Kazandı');
-            setTimeout(() => {
-                redirectToGameHistory();
-            }, 1000);
-        } else if (isBoardFull() && !winner) {
-            setTimeout(() => {
-                resetGame();
-            }, 1000);
+        if (currentPlayer === 'computer' && !winner) {
+            const bestMove = findBestMove(board, computerColor);
+            if (bestMove !== null) {
+                makeMove(bestMove, computerColor);
+
+                if (checkWinner(board, computerColor)) {
+                    setWinner('Bilgisayar Kazandı');
+                    setTimeout(() => {
+                        redirectToGameHistory();
+                    }, 1000);
+                } else {
+                    setCurrentPlayer('player');
+                }
+            }
+        }
+        if (winner) {
+            console.log('Kazanan: ' + winner);
+            console.log('Oyun bitti.');
+            updateGameHistory();
+
         }
 
-        if (currentPlayer === 'computer' && !winner) {
-            setTimeout(() => {
-                const bestMove = findBestMove(board);
-                if (bestMove !== null) {
-                    makeMove(bestMove, computerColor);
-                }
-            }, 1000);
-        }
+
+
     }, [currentPlayer, board, winner]);
+    function updateGameHistory() {
+
+
+        const gameRecord = {
+            playerName: gameData.username,
+            gameName: gameData.gameName,
+            winner: winner
+        };
+
+        const history = JSON.parse(localStorage.getItem('gameHistory')) || [];
+        history.push(gameRecord);
+        localStorage.setItem('gameHistory', JSON.stringify(history));
+    }
+
+
+
+
     function redirectToGameHistory() {
         history.push('/game-history'); // Redirect to the GameHistory page
     }
-
-    // useEffect(() => {
-    //     if (checkWinner(board, userColor)) {
-    //         setWinner('Oyuncu Kazandı');
-    //     } else if (checkWinner(board, computerColor)) {
-    //         setWinner('Bilgisayar Kazandı');
-    //     } else if (isBoardFull() && !winner) {
-    //         setTimeout(() => {
-    //             resetGame();
-    //         }, 1000);
-    //     }
-
-    //     if (currentPlayer === 'computer' && !winner) {
-    //         setTimeout(() => {
-    //             const bestMove = findBestMove(board);
-    //             if (bestMove !== null) {
-    //                 makeMove(bestMove, computerColor);
-    //             }
-    //         }, 1000);
-    //     }
-    // }, [currentPlayer, board, winner]);
 
     function isBoardFull() {
         return board.every(row => row.every(cell => cell !== EMPTY));
     }
 
     function resetGame() {
-        const playerName = 'Player Name'; // Replace with the actual player name input
-        const gameName = 'Game Name'; // Replace with the actual game name input
+        const savedGameData = JSON.parse(localStorage.getItem('gameData'));
+        const playerName = savedGameData.username; // Get the actual player name
+        const gameName = savedGameData.gameName; // Get the actual game name
 
         const gameRecord = {
             playerName,
             gameName,
-            winner
+            winner: winner || 'Draw'
         };
 
         const history = JSON.parse(localStorage.getItem('gameHistory')) || [];
@@ -91,28 +89,53 @@ export default function ConnectFour() {
 
         setBoard(createEmptyBoard());
         setCurrentPlayer('player');
-        if (winner) {
-            console.log('Kazanan: ' + winner);
-            console.log('Oyun bitti.');
-        }
+
         setWinner(null);
     }
 
     function makeMove(column, color) {
-        const newBoard = board.map(row => row.slice());
-        for (let row = ROWS - 1; row >= 0; row--) {
-            if (newBoard[row][column] === EMPTY) {
-                newBoard[row][column] = color;
-                setBoard(newBoard);
-                setCurrentPlayer(currentPlayer === 'player' ? 'computer' : 'player');
-                break;
+        if (winner) {
+            return;
+        } else {
+            const newBoard = board.map(row => row.slice());
+            for (let row = ROWS - 1; row >= 0; row--) {
+                if (newBoard[row][column] === EMPTY) {
+                    newBoard[row][column] = color;
+                    setBoard(newBoard);
+
+                    const gameWon = checkWinner(newBoard, color);
+                    if (gameWon) {
+                        if (currentPlayer === 'computer') {
+                            setWinner('Bilgisayar Kazandı');
+
+                        } else {
+
+                            setWinner('Oyuncu Kazandı');
+                        }
+                        return; // Oyun kazanıldığında işlemi burada sonlandırın
+                    }
+
+                    setCurrentPlayer(currentPlayer === 'player' ? 'computer' : 'player');
+                    break;
+                }
             }
         }
+    }
+    function redirectToGameHistory() {
+        window.location.href = '/game-history';
     }
 
     function handlePlayerMove(column) {
         if (currentPlayer === 'player' && !winner) {
             makeMove(column, userColor);
+            const playerWon = checkWinner(board, userColor);
+
+            if (playerWon) {
+                setWinner('Oyuncu Kazandı');
+                return; // Oyuncu kazandığında işlemi burada sonlandırın
+            }
+
+            setCurrentPlayer('computer');
         }
     }
 
@@ -244,6 +267,9 @@ export default function ConnectFour() {
 
             {/* Oyunu yeniden başlat butonu */}
             <button onClick={resetGame}>Yeniden Başlat</button>
+            <button onClick={redirectToGameHistory}>Game History</button>
+
+
         </div>
     );
 }

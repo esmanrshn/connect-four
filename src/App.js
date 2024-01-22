@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import GameCreateScreen from "./GameCreateScreen";
+import GameScreen from "./GameScreen";
+import GameHistory from "./GameHistory"; // Import the GameHistory component
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/game">
+          <GameScreen />
+        </Route>
+        <Route path="/game-history">
+          <GameHistory /> {/* Add the GameHistory component route */}
+        </Route>
+        <Route path="/">
+          <GameCreateScreen />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
-export default App;
+function About() {
+  return <h2>About</h2>;
+}

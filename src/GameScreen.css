@@ -1,0 +1,34 @@
+.gameScreen {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(7, 50px);
+    grid-template-rows: repeat(6, 50px);
+    gap: 5px;
+    margin: auto;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: lightgrey;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.cell.red {
+    background-color: red;
+}
+
+.cell.yellow {
+    background-color: yellow;
+}
+
+.winner {
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}

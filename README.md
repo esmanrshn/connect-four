@@ -37,6 +37,7 @@ To dive into the game, simply follow these instructions:
 - **Local Storage**: For persisting game state and history between sessions.
 
 ## Project Structure
+'''bash
 CONNECT-FOUR
 ├── node_modules
 ├── public
@@ -56,8 +57,7 @@ CONNECT-FOUR
 ├── package-lock.json
 ├── package.json
 └── README.md
-
-
+'''
 ## Credits
 
 - The game logic and AI were developed using advanced algorithmic techniques to ensure a challenging and fair gameplay experience.

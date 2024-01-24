@@ -1,29 +1,36 @@
 import React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
 function GameHistory() {
     const gameHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
+    gameHistory.forEach((row, index) => {
+        row.id = index + 1; // veya başka bir benzersiz kimlik oluşturma yöntemi kullanabilirsiniz
+    });
+
+    const columns = [
+        { field: 'playerName', headerName: 'Player Name', width: 150 },
+        { field: 'gameName', headerName: 'Game Name', width: 150 },
+        { field: 'winner', headerName: 'Winner', width: 150 },
+    ];
+
+    const getRowId = (row) => row.playerName;
 
     return (
-        <div>
-            <h2>Game History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Player Name</th>
-                        <th>Game Name</th>
-                        <th>Winner</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {gameHistory.map((record, index) => (
-                        <tr key={index}>
-                            <td>{record.playerName}</td>
-                            <td>{record.gameName}</td>
-                            <td>{record.winner}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+            <div style={{ width: 500 }}>
+                <center>
+                    <h2>Game History</h2>
+                </center>
+                <div style={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        rows={gameHistory}
+                        columns={columns}
+                        pageSize={10}
+                        autoHeight
+                        getRowId={getRowId}
+                    />
+                </div>
+            </div>
         </div>
     );
 }

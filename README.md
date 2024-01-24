@@ -1,11 +1,14 @@
-    # Connect Four Game
+ # Connect Four Game
 
 Welcome to the Connect Four Game! This is a web-based implementation of the classic Connect Four strategy game, where you can challenge the computer in a battle of wit and strategy. The game consists of 3 main screens, providing a comprehensive and engaging experience:
+
+https://en.wikipedia.org/wiki/Connect_Four
 
 - **Game Creation Screen**: Where you enter your username and select your preferred game settings.
 - **Game Screen**: The battleground where the actual game takes place.
 - **Game List Screen**: Displays a history of played games along with their outcomes.
 
+![Game Create Screen](./public/images/gcs.png)
 
 ## Features
 

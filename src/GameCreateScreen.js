@@ -10,8 +10,9 @@ function GameCreateScreen() {
     const [gameData, setGameData] = useState({
         username: '',
         gameName: '', // Yeni eklenen oyun ismi
-        userColor: localStorage.getItem('userColor') || '#000000', // Kullanıcının rengi, varsayılan siyah
-        computerColor: localStorage.getItem('computerColor') || '#FF0000', // Bilgisayarın rengi, varsayılan kırmızı
+        userColor: localStorage.getItem('userColor') || '#000000',
+        computerColor: localStorage.getItem('computerColor') || '#FF0000',
+        boardColor: localStorage.getItem('boardColor') || '#FF5733',
     });
 
     useEffect(() => {
@@ -32,6 +33,11 @@ function GameCreateScreen() {
 
         // Renkleri localStorage'a kaydet
         localStorage.setItem(name, value);
+
+        if (name === 'boardColor') {
+            // Burada oyun tahtasının rengini ayarlamalısınız
+            // Örnek: setBoardColor(value); şeklinde bir fonksiyon kullanarak
+        }
     };
 
     // Değerler local storage'a kaydedilir
@@ -104,9 +110,21 @@ function GameCreateScreen() {
                                 onChange={handleInputChange}
                             />
                         </div>
+
+                        <div>
+                            <label>board rengi:</label>
+                            <input
+                                type="color"
+                                name="boardColor"
+                                value={gameData.boardColor}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+
                     </form>
                     <br />
-                    <Button color="warning" variant="contained" onClick={handleStartGame}>
+                    <Button color="warning" id='muibtn_gamecreation' variant="contained" onClick={handleStartGame}>
                         Oyunu Başlat
                     </Button>
                 </center>
@@ -116,4 +134,7 @@ function GameCreateScreen() {
 }
 
 export default GameCreateScreen;
+
+
+
 

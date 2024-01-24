@@ -4,11 +4,18 @@
 }
 
 .board {
+
     display: grid;
     grid-template-columns: repeat(7, 50px);
     grid-template-rows: repeat(6, 50px);
     gap: 5px;
     margin: auto;
+}
+
+.arka {
+    border: 3px solid black;
+    margin-top: 150px;
+    scale: 1.5;
 }
 
 .cell {
@@ -32,3 +39,18 @@
     font-size: 24px;
     font-weight: bold;
 }
+
+button {
+    margin: 70px;
+    scale: 2;
+    margin-top: 150px;
+}
+
+#muibtn {
+    scale: 1;
+    margin-top: 100px;
+    margin-left: 20px;
+}
+
+
+.winner_text {}

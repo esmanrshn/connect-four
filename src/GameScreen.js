@@ -1,6 +1,8 @@
+import { red } from '@mui/material/colors';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'; // Import useHistory for redirection
-
+import "./GameScreen.css"
+import { Button } from '@mui/material';
 
 const ROWS = 6;
 const COLUMNS = 7;
@@ -18,9 +20,12 @@ export default function ConnectFour() {
     const [gameData, setGameData] = useState(JSON.parse(localStorage.getItem('gameData')));
     const [gameHistory, setGameHistory] = useState(localStorage.getItem('gameHistory') ? JSON.parse(localStorage.getItem('gameHistory')) : []);
 
+
     // Önceki sayfadan kullanıcı ve bilgisayar renklerini al
     const userColor = localStorage.getItem('userColor') || 'blue';
     const computerColor = localStorage.getItem('computerColor') || 'red'; // Varsayılan olarak kırmızı
+    const boardColor = localStorage.getItem('boardColor') || 'red'; // Varsayılan renk olarak kırmızı kullanıyoruz
+
     useEffect(() => {
         if (currentPlayer === 'computer' && !winner) {
             const bestMove = findBestMove(board, computerColor);
@@ -242,34 +247,36 @@ export default function ConnectFour() {
 
 
     return (
-        <div>
-            {/* Oyun tahtasının görsel temsili */}
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${COLUMNS}, 50px)` }}>
-                {board.map((row, rowIndex) =>
-                    row.map((cell, colIndex) => (
-                        <div
-                            key={`${rowIndex}-${colIndex}`}
-                            style={{
-                                width: 50,
-                                height: 50,
-                                backgroundColor: cell === EMPTY ? 'white' : cell,
-                                border: '1px solid black',
-                                borderRadius: '50%',
-                            }}
-                            onClick={() => handlePlayerMove(colIndex)}
-                        />
-                    ))
-                )}
+        <center>
+            {winner && <div className='winner_text'><h3>Kazanan: {winner}</h3></div>}
+
+            <div>
+                <div style={{ maxWidth: 355 }}>
+                    <div className='arka' style={{ display: 'grid', borderRadius: 5, backgroundColor: boardColor, gridTemplateColumns: `repeat(${COLUMNS}, 50px)` }}>
+                        {board.map((row, rowIndex) =>
+                            row.map((cell, colIndex) => (
+                                <div
+                                    key={`${rowIndex}-${colIndex}`}
+                                    style={{
+                                        width: 50,
+                                        height: 50,
+                                        backgroundColor: cell === EMPTY ? 'white' : cell,
+                                        border: '1px solid black',
+                                        borderRadius: '50%',
+                                    }}
+                                    onClick={() => handlePlayerMove(colIndex)}
+                                />
+                            ))
+                        )}
+                    </div>
+
+                </div>
+
+                <Button variant='contained' id='muibtn' onClick={resetGame}>Yeniden Başlat</Button>
+                <Button variant='contained' id='muibtn' onClick={redirectToGameHistory}>Game History</Button>
             </div>
-
-            {/* Kazanan bilgisini göster */}
-            {winner && <div>Kazanan: {winner}</div>}
-
-            {/* Oyunu yeniden başlat butonu */}
-            <button onClick={resetGame}>Yeniden Başlat</button>
-            <button onClick={redirectToGameHistory}>Game History</button>
-
-
-        </div>
+        </center>
     );
+
+
 }
